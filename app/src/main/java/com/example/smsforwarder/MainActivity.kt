@@ -33,6 +33,10 @@ class MainActivity : AppCompatActivity() {
             checkAndRequestPermissions()
         }
 
+        findViewById<Button>(R.id.btnAppInfo).setOnClickListener {
+            openAppDetailsSettings()
+        }
+
         findViewById<Button>(R.id.btnIgnoreBattery).setOnClickListener {
             requestIgnoreBatteryOptimizations()
         }
@@ -62,7 +66,18 @@ class MainActivity : AppCompatActivity() {
         if (neededPermissions.isNotEmpty()) {
             ActivityCompat.requestPermissions(this, neededPermissions.toTypedArray(), 100)
         } else {
-            Toast.makeText(this, "短信权限已授予", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "常规短信权限已授予", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun openAppDetailsSettings() {
+        try {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            intent.data = Uri.parse("package:$packageName")
+            startActivity(intent)
+            Toast.makeText(this, "请在权限管理中，找到并允许【通知类短信】", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            Toast.makeText(this, "无法打开应用设置", Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -13,23 +13,48 @@
         android:text="短信转发已启动\n将只转发包含“龙腾”的短信"
         android:textAlignment="center"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/btnPermissions"
+        app:layout_constraintBottom_toTopOf="@+id/tvLockReminder"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/tvLockReminder"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:text="⚠️ 提示: 请在多任务界面长按本程序，点击锁头图标将其锁定，防止被系统清理。"
+        android:textColor="#D32F2F"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/btnPermissions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statusText"
+        android:layout_marginBottom="16dp" />
 
     <Button
         android:id="@+id/btnPermissions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="检查/请求权限"
+        android:text="检查/请求常规短信权限"
+        app:layout_constraintBottom_toTopOf="@+id/btnAppInfo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLockReminder"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btnAppInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="打开权限设置 (请手动允许通知类短信)"
         app:layout_constraintBottom_toTopOf="@+id/btnIgnoreBattery"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/statusText"
-        android:layout_marginBottom="16dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/btnPermissions"
+        android:layout_marginBottom="8dp"/>
 
     <Button
         android:id="@+id/btnIgnoreBattery"
@@ -39,8 +64,8 @@
         app:layout_constraintBottom_toTopOf="@+id/btnXiaomiAutoStart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnPermissions"
-        android:layout_marginBottom="16dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/btnAppInfo"
+        android:layout_marginBottom="8dp"/>
 
     <Button
         android:id="@+id/btnXiaomiAutoStart"
