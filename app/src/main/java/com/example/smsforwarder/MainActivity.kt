@@ -1,0 +1,109 @@
+package com.example.smsforwarder
+
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.ComponentName
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var logText: TextView
+    private lateinit var dbHelper: LogDatabaseHelper
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        logText = findViewById(R.id.logText)
+        dbHelper = LogDatabaseHelper(this)
+
+        findViewById<Button>(R.id.btnPermissions).setOnClickListener {
+            checkAndRequestPermissions()
+        }
+
+        findViewById<Button>(R.id.btnIgnoreBattery).setOnClickListener {
+            requestIgnoreBatteryOptimizations()
+        }
+
+        findViewById<Button>(R.id.btnXiaomiAutoStart).setOnClickListener {
+            openXiaomiAutoStartSettings()
+        }
+
+        refreshLogs()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshLogs()
+    }
+
+    private fun checkAndRequestPermissions() {
+        val permissions = mutableListOf(
+            Manifest.permission.RECEIVE_SMS,
+            Manifest.permission.READ_SMS
+        )
+
+        val neededPermissions = permissions.filter {
+            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }
+
+        if (neededPermissions.isNotEmpty()) {
+            ActivityCompat.requestPermissions(this, neededPermissions.toTypedArray(), 100)
+        } else {
+            Toast.makeText(this, "短信权限已授予", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    @SuppressLint("BatteryLife")
+    private fun requestIgnoreBatteryOptimizations() {
+        val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
+                val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                intent.data = Uri.parse("package:$packageName")
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "已忽略电池优化", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun openXiaomiAutoStartSettings() {
+        try {
+            val intent = Intent()
+            intent.component = ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")
+            startActivity(intent)
+        } catch (e: Exception) {
+            try {
+                // Fallback for newer MIUI / HyperOS versions
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.parse("package:$packageName")
+                startActivity(intent)
+                Toast.makeText(this, "请在设置中手动开启自启动", Toast.LENGTH_LONG).show()
+            } catch (ex: Exception) {
+                Toast.makeText(this, "无法打开自启动设置", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun refreshLogs() {
+        val logs = dbHelper.getAllLogs()
+        if (logs.isEmpty()) {
+            logText.text = "暂无转发记录..."
+        } else {
+            logText.text = logs.joinToString("\n\n")
+        }
+    }
+}
