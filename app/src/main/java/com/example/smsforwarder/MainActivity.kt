@@ -3,6 +3,7 @@ package com.example.smsforwarder
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -11,6 +12,7 @@ import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +23,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var logText: TextView
     private lateinit var dbHelper: LogDatabaseHelper
+    
+    private lateinit var etKeyword: EditText
+    private lateinit var etNtfyUrl: EditText
+    private lateinit var etFeishuUrl: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +34,16 @@ class MainActivity : AppCompatActivity() {
 
         logText = findViewById(R.id.logText)
         dbHelper = LogDatabaseHelper(this)
+        
+        etKeyword = findViewById(R.id.etKeyword)
+        etNtfyUrl = findViewById(R.id.etNtfyUrl)
+        etFeishuUrl = findViewById(R.id.etFeishuUrl)
+
+        loadSettings()
+
+        findViewById<Button>(R.id.btnSaveSettings).setOnClickListener {
+            saveSettings()
+        }
 
         findViewById<Button>(R.id.btnPermissions).setOnClickListener {
             checkAndRequestPermissions()
@@ -51,6 +67,24 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         refreshLogs()
+    }
+
+    private fun loadSettings() {
+        val prefs = getSharedPreferences("SmsSettings", Context.MODE_PRIVATE)
+        etKeyword.setText(prefs.getString("keyword", ""))
+        etNtfyUrl.setText(prefs.getString("ntfy_url", "https://minli52129.onrender.com/duanxin"))
+        etFeishuUrl.setText(prefs.getString("feishu_url", ""))
+    }
+
+    private fun saveSettings() {
+        val prefs = getSharedPreferences("SmsSettings", Context.MODE_PRIVATE)
+        with(prefs.edit()) {
+            putString("keyword", etKeyword.text.toString().trim())
+            putString("ntfy_url", etNtfyUrl.text.toString().trim())
+            putString("feishu_url", etFeishuUrl.text.toString().trim())
+            apply()
+        }
+        Toast.makeText(this, "设置已保存", Toast.LENGTH_SHORT).show()
     }
 
     private fun checkAndRequestPermissions() {
@@ -102,7 +136,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         } catch (e: Exception) {
             try {
-                // Fallback for newer MIUI / HyperOS versions
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                 intent.data = Uri.parse("package:$packageName")
                 startActivity(intent)

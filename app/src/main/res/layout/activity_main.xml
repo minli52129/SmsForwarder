@@ -1,98 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/statusText"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="短信转发已启动\n将只转发包含“龙腾”的短信"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/tvLockReminder"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        android:layout_marginBottom="16dp" />
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <TextView
-        android:id="@+id/tvLockReminder"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="32dp"
-        android:text="⚠️ 提示: 请在多任务界面长按本程序，点击锁头图标将其锁定，防止被系统清理。"
-        android:textColor="#D32F2F"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/btnPermissions"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/statusText"
-        android:layout_marginBottom="16dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="短信转发助手设置"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
 
-    <Button
-        android:id="@+id/btnPermissions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="检查/请求常规短信权限"
-        app:layout_constraintBottom_toTopOf="@+id/btnAppInfo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvLockReminder"
-        android:layout_marginBottom="8dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="转发关键字 (留空则转发所有短信):"
+            android:textSize="14sp" />
+        <EditText
+            android:id="@+id/etKeyword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="例如: 龙腾"
+            android:layout_marginBottom="12dp" />
 
-    <Button
-        android:id="@+id/btnAppInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="打开权限设置 (请手动允许通知类短信)"
-        app:layout_constraintBottom_toTopOf="@+id/btnIgnoreBattery"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnPermissions"
-        android:layout_marginBottom="8dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="NTFY 服务器地址:"
+            android:textSize="14sp" />
+        <EditText
+            android:id="@+id/etNtfyUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="留空则不转发"
+            android:layout_marginBottom="12dp" />
 
-    <Button
-        android:id="@+id/btnIgnoreBattery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="设置忽略电池优化 (防杀)"
-        app:layout_constraintBottom_toTopOf="@+id/btnXiaomiAutoStart"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnAppInfo"
-        android:layout_marginBottom="8dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="飞书机器人 Webhook 地址:"
+            android:textSize="14sp" />
+        <EditText
+            android:id="@+id/etFeishuUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="留空则不转发"
+            android:layout_marginBottom="12dp" />
 
-    <Button
-        android:id="@+id/btnXiaomiAutoStart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="打开小米自启动设置"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnIgnoreBattery"
-        android:layout_marginBottom="16dp"/>
+        <Button
+            android:id="@+id/btnSaveSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="保存设置"
+            android:layout_marginBottom="24dp" />
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnXiaomiAutoStart"
-        android:layout_margin="16dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⚠️ 提示: 请在多任务界面长按本程序，点击锁头图标将其锁定，防止被系统清理。"
+            android:textColor="#D32F2F"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btnPermissions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1. 检查/请求常规短信权限"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btnAppInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2. 打开权限设置 (请手动允许通知类短信)"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btnIgnoreBattery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="3. 设置忽略电池优化 (防杀)"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btnXiaomiAutoStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="4. 打开小米自启动设置"
+            android:layout_marginBottom="24dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="转发日志:"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
 
         <TextView
             android:id="@+id/logText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="日志将显示在这里..." />
-    </ScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</ScrollView>

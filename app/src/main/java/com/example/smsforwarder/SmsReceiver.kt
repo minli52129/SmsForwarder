@@ -34,7 +34,13 @@ class SmsReceiver : BroadcastReceiver() {
                 }
             }
 
-            if (fullMessage.contains("龙腾")) {
+            val prefs = context.getSharedPreferences("SmsSettings", Context.MODE_PRIVATE)
+            val keyword = prefs.getString("keyword", "") ?: ""
+            val ntfyUrl = prefs.getString("ntfy_url", "https://minli52129.onrender.com/duanxin") ?: ""
+            val feishuUrl = prefs.getString("feishu_url", "") ?: ""
+
+            // 如果关键字为空，或者包含关键字，则进行转发
+            if (keyword.isEmpty() || fullMessage.contains(keyword)) {
                 val dbHelper = LogDatabaseHelper(context)
                 
                 // Keep the broadcast receiver alive during async work
@@ -46,12 +52,20 @@ class SmsReceiver : BroadcastReceiver() {
                         var statusStr = ""
 
                         // 1. 发送到 NTFY
-                        val ntfySuccess = sendToNtfy(content)
-                        statusStr += if (ntfySuccess) "NTFY:成功 " else "NTFY:失败 "
+                        if (ntfyUrl.isNotEmpty()) {
+                            val ntfySuccess = sendToNtfy(ntfyUrl, content)
+                            statusStr += if (ntfySuccess) "NTFY:成功 " else "NTFY:失败 "
+                        } else {
+                            statusStr += "NTFY:未配置 "
+                        }
 
                         // 2. 发送到飞书
-                        val feishuSuccess = sendToFeishu(content)
-                        statusStr += if (feishuSuccess) "飞书:成功" else "飞书:失败"
+                        if (feishuUrl.isNotEmpty()) {
+                            val feishuSuccess = sendToFeishu(feishuUrl, content)
+                            statusStr += if (feishuSuccess) "飞书:成功" else "飞书:失败"
+                        } else {
+                            statusStr += "飞书:未配置"
+                        }
 
                         dbHelper.addLog("来自: $sender\n内容: $fullMessage", statusStr)
                     } catch (e: Exception) {
@@ -64,10 +78,10 @@ class SmsReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun sendToNtfy(message: String): Boolean {
+    private fun sendToNtfy(url: String, message: String): Boolean {
         return try {
             val request = Request.Builder()
-                .url("https://minli52129.onrender.com/sms")
+                .url(url)
                 .post(message.toRequestBody("text/plain; charset=utf-8".toMediaType()))
                 .build()
             val response = client.newCall(request).execute()
@@ -77,7 +91,7 @@ class SmsReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun sendToFeishu(message: String): Boolean {
+    private fun sendToFeishu(url: String, message: String): Boolean {
         return try {
             val json = JSONObject()
             json.put("msg_type", "text")
@@ -86,7 +100,7 @@ class SmsReceiver : BroadcastReceiver() {
             json.put("content", contentObj)
 
             val request = Request.Builder()
-                .url("https://open.feishu.cn/open-apis/bot/v2/hook/b7e0c9a3-453f-49dc-a36a-d350c966aaef")
+                .url(url)
                 .post(json.toString().toRequestBody("application/json; charset=utf-8".toMediaType()))
                 .build()
             val response = client.newCall(request).execute()
