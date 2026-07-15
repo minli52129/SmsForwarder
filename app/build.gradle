@@ -9,10 +9,13 @@ android {
 
     defaultConfig {
         applicationId "com.example.smsforwarder"
-        minSdk 26
+        minSdk 24
         targetSdk 34
         versionCode 3
-        versionName "1.2"
+        versionName "1.2-legacy"
+        ndk {
+            abiFilters 'armeabi-v7a'
+        }
     }
 
     buildTypes {

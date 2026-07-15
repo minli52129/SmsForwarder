@@ -85,24 +85,17 @@
             android:layout_marginBottom="8dp"/>
 
         <Button
-            android:id="@+id/btnNotificationAccess"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="3. 开启通知读取权限 (支持5G/RCS消息)"
-            android:layout_marginBottom="8dp"/>
-
-        <Button
             android:id="@+id/btnIgnoreBattery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="4. 设置忽略电池优化 (防杀)"
+            android:text="3. 设置忽略电池优化 (防杀)"
             android:layout_marginBottom="8dp"/>
 
         <Button
             android:id="@+id/btnXiaomiAutoStart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="5. 打开小米自启动设置"
+            android:text="4. 打开小米自启动设置"
             android:layout_marginBottom="24dp"/>
 
         <TextView

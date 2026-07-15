@@ -53,10 +53,6 @@ class MainActivity : AppCompatActivity() {
             openAppDetailsSettings()
         }
 
-        findViewById<Button>(R.id.btnNotificationAccess).setOnClickListener {
-            openNotificationAccessSettings()
-        }
-
         findViewById<Button>(R.id.btnIgnoreBattery).setOnClickListener {
             requestIgnoreBatteryOptimizations()
         }
@@ -116,16 +112,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "请在权限管理中，找到并允许【通知类短信】", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             Toast.makeText(this, "无法打开应用设置", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun openNotificationAccessSettings() {
-        try {
-            val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
-            startActivity(intent)
-            Toast.makeText(this, "请在此列表中找到【短信转发】，并允许读取通知", Toast.LENGTH_LONG).show()
-        } catch (e: Exception) {
-            Toast.makeText(this, "无法打开通知读取设置，请手动在设置中搜索“通知读取”", Toast.LENGTH_LONG).show()
         }
     }
 
