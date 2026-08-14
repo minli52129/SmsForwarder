@@ -61,8 +61,12 @@ class MainActivity : AppCompatActivity() {
             requestIgnoreBatteryOptimizations()
         }
 
-        findViewById<Button>(R.id.btnXiaomiAutoStart).setOnClickListener {
-            openXiaomiAutoStartSettings()
+        findViewById<Button>(R.id.btnAutoStart).setOnClickListener {
+            openVivoAutoStartSettings()
+        }
+
+        findViewById<Button>(R.id.btnVivoSecurity).setOnClickListener {
+            openVivoSecuritySettings()
         }
 
         refreshLogs()
@@ -143,20 +147,37 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun openXiaomiAutoStartSettings() {
+    private fun openVivoAutoStartSettings() {
         try {
             val intent = Intent()
-            intent.component = ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")
+            intent.component = ComponentName("com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.AddWhiteListActivity")
             startActivity(intent)
         } catch (e: Exception) {
             try {
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                intent.data = Uri.parse("package:$packageName")
+                val intent = Intent()
+                intent.component = ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity")
                 startActivity(intent)
-                Toast.makeText(this, "请在设置中手动开启自启动", Toast.LENGTH_LONG).show()
             } catch (ex: Exception) {
-                Toast.makeText(this, "无法打开自启动设置", Toast.LENGTH_SHORT).show()
+                try {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    intent.data = Uri.parse("package:$packageName")
+                    startActivity(intent)
+                    Toast.makeText(this, "请在设置中手动开启自启动", Toast.LENGTH_LONG).show()
+                } catch (exx: Exception) {
+                    Toast.makeText(this, "无法打开自启动设置", Toast.LENGTH_SHORT).show()
+                }
             }
+        }
+    }
+
+    private fun openVivoSecuritySettings() {
+        try {
+            // Try to open security settings where verification code protection might be
+            val intent = Intent(Settings.ACTION_SECURITY_SETTINGS)
+            startActivity(intent)
+            Toast.makeText(this, "请在安全设置或信息设置中关闭【验证码安全保护】", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            Toast.makeText(this, "无法自动打开，请手动进入设置 -> 隐私或安全，关闭验证码保护", Toast.LENGTH_LONG).show()
         }
     }
 

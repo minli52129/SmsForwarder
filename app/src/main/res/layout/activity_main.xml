@@ -99,10 +99,17 @@
             android:layout_marginBottom="8dp"/>
 
         <Button
-            android:id="@+id/btnXiaomiAutoStart"
+            android:id="@+id/btnAutoStart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="5. 打开小米自启动设置"
+            android:text="5. 打开VIVO自启动设置"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btnVivoSecurity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="6. 关闭VIVO验证码安全保护 (极其重要)"
             android:layout_marginBottom="24dp"/>
 
         <TextView
