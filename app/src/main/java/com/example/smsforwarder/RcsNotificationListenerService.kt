@@ -15,7 +15,13 @@ class RcsNotificationListenerService : NotificationListenerService() {
             "com.android.mms",
             "com.google.android.apps.messaging",
             "com.miui.smsextra",
-            "com.samsung.android.messaging"
+            "com.samsung.android.messaging",
+            "com.coloros.mms",
+            "com.oplus.mms",
+            "com.oneplus.mms",
+            "com.vivo.mms",
+            "com.huawei.mms",
+            "com.hihonor.mms"
         )
 
         // 只有短信应用的通知才处理，或者类别是 CATEGORY_MESSAGE 的

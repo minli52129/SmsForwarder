@@ -22,6 +22,22 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      - name: Setup Android SDK (API 37)
+        uses: android-actions/setup-android@v3
+        with:
+          packages: |
+            platforms;android-37.0
+            build-tools;37.0.0
+            platform-tools
+
+      - name: Ensure Android 37 SDK symlink
+        run: |
+          SDK_PATH="${ANDROID_HOME:-$ANDROID_SDK_ROOT}/platforms"
+          if [ -d "$SDK_PATH/android-37.0" ] && [ ! -e "$SDK_PATH/android-37" ]; then
+            ln -s android-37.0 "$SDK_PATH/android-37"
+            echo "Created symlink android-37 -> android-37.0"
+          fi
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 

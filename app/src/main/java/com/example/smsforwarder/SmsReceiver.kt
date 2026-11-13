@@ -19,12 +19,15 @@ class SmsReceiver : BroadcastReceiver() {
                 }
             }
             
-            // Keep the broadcast receiver alive slightly longer to process
+            // Keep the broadcast receiver alive until the async network request finishes
             val pendingResult = goAsync()
-            
-            ForwarderHelper.processMessage(context, sender, fullMessage)
-            
-            pendingResult.finish()
+            try {
+                ForwarderHelper.processMessage(context, sender, fullMessage) {
+                    pendingResult.finish()
+                }
+            } catch (e: Exception) {
+                pendingResult.finish()
+            }
         }
     }
 }

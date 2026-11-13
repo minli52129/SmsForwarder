@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -18,6 +19,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,6 +34,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val mainScrollView = findViewById<View>(R.id.mainScrollView)
+        ViewCompat.setOnApplyWindowInsetsListener(mainScrollView) { view, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            view.setPadding(insets.left, insets.top, insets.right, insets.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
 
         logText = findViewById(R.id.logText)
         dbHelper = LogDatabaseHelper(this)
@@ -113,7 +125,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
             intent.data = Uri.parse("package:$packageName")
             startActivity(intent)
-            Toast.makeText(this, "请在权限管理中，找到并允许【通知类短信】", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "请允许【通知类短信】；Android 15-17 请在右上角点击【允许受限设置】", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             Toast.makeText(this, "无法打开应用设置", Toast.LENGTH_SHORT).show()
         }
@@ -123,7 +135,7 @@ class MainActivity : AppCompatActivity() {
         try {
             val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
             startActivity(intent)
-            Toast.makeText(this, "请在此列表中找到【短信转发】，并允许读取通知", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "请找到【短信转发】并允许通知读取（若灰色请先在应用信息右上角允许受限设置）", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             Toast.makeText(this, "无法打开通知读取设置，请手动在设置中搜索“通知读取”", Toast.LENGTH_LONG).show()
         }

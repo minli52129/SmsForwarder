@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipToPadding="false"
     android:fillViewport="true">
 
     <LinearLayout
@@ -103,7 +105,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="5. 打开小米自启动设置"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="12dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="提示(Android 15-17): 若第3步通知读取开关为灰色，请先点第2步进入应用信息右上角菜单点击【允许受限设置】；Android 17起系统对含验证码短信有延迟读取保护，普通短信可正常即时转发。"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="20dp"/>
 
         <TextView
             android:layout_width="match_parent"

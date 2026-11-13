@@ -21,16 +21,24 @@ object ForwarderHelper {
     // 用于防止同一条消息由于短信广播和通知监听器同时触发而重复转发
     private val recentMessages = mutableMapOf<String, Long>()
 
-    fun processMessage(context: Context, sender: String, messageBody: String) {
-        val now = System.currentTimeMillis()
-        // 清理 10 秒前的缓存
-        recentMessages.entries.removeIf { now - it.value > 10000 }
+    fun processMessage(
+        context: Context,
+        sender: String,
+        messageBody: String,
+        onComplete: (() -> Unit)? = null
+    ) {
+        synchronized(this) {
+            val now = System.currentTimeMillis()
+            // 清理 10 秒前的缓存
+            recentMessages.entries.removeIf { now - it.value > 10000 }
 
-        val msgKey = "$sender:$messageBody"
-        if (recentMessages.containsKey(msgKey)) {
-            return // 短时间内已经处理过该消息，直接忽略
+            val msgKey = "$sender:$messageBody"
+            if (recentMessages.containsKey(msgKey)) {
+                onComplete?.invoke()
+                return // 短时间内已经处理过该消息，直接忽略
+            }
+            recentMessages[msgKey] = now
         }
-        recentMessages[msgKey] = now
 
         val prefs = context.getSharedPreferences("SmsSettings", Context.MODE_PRIVATE)
         val keyword = prefs.getString("keyword", "") ?: ""
@@ -38,7 +46,8 @@ object ForwarderHelper {
         val feishuUrl = prefs.getString("feishu_url", "") ?: ""
 
         if (keyword.isEmpty() || messageBody.contains(keyword)) {
-            val dbHelper = LogDatabaseHelper(context)
+            val appContext = context.applicationContext
+            val dbHelper = LogDatabaseHelper(appContext)
             
             CoroutineScope(Dispatchers.IO).launch {
                 try {
@@ -64,8 +73,12 @@ object ForwarderHelper {
                     dbHelper.addLog("来自: $sender\n内容: $messageBody", statusStr)
                 } catch (e: Exception) {
                     dbHelper.addLog("转发异常: ${e.message}", "失败")
+                } finally {
+                    onComplete?.invoke()
                 }
             }
+        } else {
+            onComplete?.invoke()
         }
     }
 
