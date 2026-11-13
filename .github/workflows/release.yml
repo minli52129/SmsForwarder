@@ -26,12 +26,7 @@ jobs:
         run: |
           SDKMGR="${ANDROID_HOME:-/usr/local/lib/android/sdk}/cmdline-tools/latest/bin/sdkmanager"
           yes | "$SDKMGR" --licenses > /dev/null || true
-          "$SDKMGR" --install "platforms;android-37.0" "build-tools;37.0.0" || "$SDKMGR" --install "platforms;android-37" "build-tools;37.0.0"
-          SDK_PATH="${ANDROID_HOME:-/usr/local/lib/android/sdk}/platforms"
-          if [ -d "$SDK_PATH/android-37.0" ] && [ ! -e "$SDK_PATH/android-37" ]; then
-            ln -s android-37.0 "$SDK_PATH/android-37"
-            echo "Created symlink android-37 -> android-37.0"
-          fi
+          "$SDKMGR" --install "platforms;android-37.0" "build-tools;37.0.0"
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
